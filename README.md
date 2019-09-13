@@ -3,7 +3,7 @@ A utility to convert from AzureRM 6 to Az PowerShell
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+This script converts all scripts given a root directory from AzureRM 6 to Az PowerShell using mappings provided by Azure PowerShell's Github repo. The only thing this script does not take into consideration is breaking changes. Breaking changes must be analyzed per code base. You can read up on breaking changes to Az by navigating to the [Breaking changes for Az 1.0.0](https://docs.microsoft.com/en-us/powershell/azure/migrate-az-1.0.0?view=azps-2.6.0) document.
 
 ### Prerequisites
 
