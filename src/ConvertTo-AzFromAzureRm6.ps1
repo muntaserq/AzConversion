@@ -5,6 +5,9 @@
 .DESCRIPTION
   A PowerShell script to convert a directory and all sub directories from AzureRM 6 to Az PowerShell.
 
+.PARAMETER FileName
+  A string match file names. Wildcarding is supported.
+
 .PARAMETER RootDirectory
   The root directory to start the conversion from.
 
@@ -13,10 +16,14 @@
 
 .EXAMPLE
   .\ConvertTo-AzFromAzureRm6.ps1 -RootDirectory 'S:\SourceCode\myrepo'
+  .\ConvertTo-AzFromAzureRm6.ps1 -RootDirectory 'S:\SourceCode\myrepo' -FileName '.ps1'
   .\ConvertTo-AzFromAzureRm6.ps1 -RootDirectory 'S:\SourceCode\myrepo' -CustomMappings @{ "testAzureRm6" = "testAz" }
 #>
 [CmdletBinding()]
 param(
+  [Parameter(Mandatory = $false)]
+  [String] $FileName,
+
   [Parameter(Mandatory = $true)]
   [ValidateScript( {
       if ( -Not ($_ | Test-Path) )
@@ -37,6 +44,10 @@ $items = Get-ChildItem "$RootDirectory\*" -Exclude @('*.exe', '*.json') -Recurse
 $azureMappings = ((Invoke-WebRequest -Uri https://raw.githubusercontent.com/Azure/azure-powershell/master/src/Accounts/Accounts/AzureRmAlias/Mappings.json -UseBasicParsing).Content | ConvertFrom-Json)
 
 $customMappingsAsObject = [PSCustomObject]$CustomMappings
+
+if ($FileName) {
+  $items = $items | Where-Object { $($_.Name) -match $FileName }
+}
 
 foreach ($item in $items)
 {
